@@ -1,0 +1,52 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": "100",
+  "data": [
+    {
+      "userId": 1,
+      "userName": "吴成卓",
+      "userPhone": "19919990911",
+      "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
+      "userEmail": "11997727@qq.com",
+      "userRole":1,
+      "userStatus": 1
+    },
+    {
+      "userId": 1,
+      "userName": "吴成卓",
+      "userPhone": "19919990911",
+      "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
+      "userEmail": "11997727@qq.com",
+
+      "userStatus": 1
+    },
+    {
+      "userId": 1,
+      "userName": "吴成卓",
+      "userPhone": "19919990911",
+      "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
+      "userEmail": "11997727@qq.com",
+      "userRole":1,
+      "userStatus": 1
+    },
+    {
+      "userId": 1,
+      "userName": "吴成卓",
+      "userPhone": "19919990911",
+      "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
+      "userEmail": "11997727@qq.com",
+      "userRole":1,
+      "userStatus": 1
+    },
+    {
+      "userId": 1,
+      "userName": "吴成卓",
+      "userPhone": "19919990911",
+      "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
+      "userEmail": "11997727@qq.com",
+      "userRole":1,
+      "userStatus": 1
+    }
+  ]
+}
