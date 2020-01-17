@@ -9,6 +9,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="lib/layui/css/layui.css" media="all">
+    <script src="js/jquery.min.js"></script>
     <script src="lib/layui/layui.js"></script>
 </head>
 
@@ -59,7 +60,11 @@
 
 <script>
 
+$(function () {
 
+    // let $user=JSON.parse(sessionStorage.getItem('user'))
+    let $url=JSON.parse(sessionStorage.getItem('url'))
+    let $token=JSON.parse(sessionStorage.getItem('token'))
 
     layui.use(['form', 'upload'], function () {
         var $ = layui.$
@@ -84,16 +89,20 @@
 
         upload.render({
             elem: '#layuiadmin-upload-useradmin'
-            , url: 'http://localhost:8080/usersUpload'
+            , url: $url+'/usersUpload'
             , accept: 'file'
             , method: 'post'
+            ,data:{'token':$token}
             , done: function (res) {
                 if(res.code==0){
                     $(this.item).prev("div").children("input").val(res.url)
                     layer.msg(res.status)
-                }else{
+                }else if(res.code==4){
                     layer.msg(res.status)
+                }else{
+                    layer.msg('error')
                 }
+
             }
         });
 
@@ -115,6 +124,9 @@
 
 
     })
+})
+
+
 
 
 

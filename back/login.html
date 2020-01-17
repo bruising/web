@@ -42,7 +42,6 @@
       let $url = "";
       $.get('serverconfig.json', function (responseText, textStatus, XMLHttpRequest) {
         $url = responseText.protocol + responseText.domain + responseText.port + responseText.context;
-
       });
       layui.use('form', function () {
         var form = layui.form;
@@ -54,9 +53,16 @@
             dataType: "json",
             data: data.field,
             success: function (rs) {
-              layer.msg(JSON.stringify(rs.data), function () {
-                location.href = 'index.html'
-              });
+              if(rs.code==0){
+                layer.msg(JSON.stringify(rs.msg), function () {
+                  sessionStorage.setItem('url',JSON.stringify($url))
+                  sessionStorage.setItem('user',JSON.stringify(rs.data))
+                  sessionStorage.setItem('token',JSON.stringify(rs.token))
+                  location.href = 'index.html'
+                });
+              }else{
+                layer.msg(JSON.stringify(rs.msg))
+              }
             }
           })
           return false;
