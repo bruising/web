@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="./layui/css/layui.css">
+<script src="js/jquery.min.js"></script>
+<body>
+
+<div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin"
+     style="padding: 20px 0 0 0;">
+    <div style="width: 90%;margin: 15px auto;">
+            <textarea name="desc"  placeholder="请输入标题" class="layui-textarea"></textarea>
+        </div>
+
+    <div style="width: 90%;margin: 15px auto;">
+        <textarea name="edit" id="edit" cols="30" rows="10"></textarea>
+        <div class="layui-btn-group" style="margin-top: 10px">
+            <button class="layui-btn" lay-submit lay-filter="LAY-user-front-submit11"  id="LAY-user-front-submit" lay-event="getContent">发布</button>
+        </div>
+    </div>
+
+</div>
+
+</body>
+<script src="./layui/layui.js"></script>
+<script>
+
+    layui.extend({
+        tinymce: '{/}./tinymce/tinymce'
+    }).use(['tinymce', 'util', 'layer','form'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , upload = layui.upload
+            ,tinymce = layui.tinymce
+            ,util = layui.util;
+
+        var edit = tinymce.render({
+            elem: "#edit"
+            , height: 600
+        });
+
+        util.event('lay-event', {
+            getContent: function () {
+                $('#edit').val(edit.getContent())
+                console.log(edit.getContent())
+
+                layer.msg("展开控制台查看")
+            }
+        });
+
+
+    });
+</script>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>网站会员</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="lib/layui/css/layui.css" media="all">
+    <script src="js/jquery.min.js"></script>
+<!--    <script type="text/javascript" src="js/xadmin.js"></script>-->
+</head>
+
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">新闻标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="news_title" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">发布人</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="userName" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">新闻状态</label>
+                    <div class="layui-input-block">
+                        <select name="news_status">
+                            <option value="0">不限</option>
+                            <option value="1">正常</option>
+                            <option value="2">待审核</option>
+                            <option value="3">已下架</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">下架</button>
+                <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">发布</button>
+            </div>
+
+            <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
+
+
+            <script type="text/html" id="news_status">
+                {{#  if(d.news_status === 1){ }}
+
+                <button type="button" class="layui-btn layui-btn-xs ">正常</button>
+                {{#  } }}
+                {{#  if(d.news_status === 2){ }}
+                <button type="button" class="layui-btn layui-btn-primary layui-btn-xs">待审核</button>
+                {{#  } }}
+                {{#  if(d.news_status === 3){ }}
+                <button type="button" class="layui-btn layui-btn-danger layui-btn-xs">已下架</button>
+                {{#  } }}
+
+            </script>
+            <script type="text/html" id="table-useradmin-webuser">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="qz"><i class="layui-icon layui-icon-edit"></i>权重</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-search"></i>详情</a>
+                {{#  if(d.news_status ==1){ }}
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-down"></i>下架</a>
+                {{#  } }}
+                {{#  if(d.news_status ===3){ }}
+                <a class="layui-btn  layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-up"></i>上架</a>
+                {{#  } }}
+                {{#  if(d.news_status ===2){ }}
+                 <input type="checkbox" class="layui-input-block"  name="open" lay-skin="switch" lay-filter="switchTest" lay-text="已通过|待审">
+                {{#  } }}
+            </script>
+        </div>
+    </div>
+</div>
+
+<script src="lib/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table;
+
+        form.on('switch(switchTest)', function(data){
+            layer.msg('开关checked：'+ (this.checked ? 'true' : 'false'), {
+                offset: '6px'
+            });
+            layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+        });
+
+
+
+        //用户管理
+        table.render({
+            elem: '#LAY-user-manage'
+            , url: 'news.json' //模拟接口
+            , cols: [[
+                { type: 'checkbox', fixed: 'left' },
+                { type: 'numbers', width: 80, title: '序号', sort: true }
+                , { field: 'news_title', title: '新闻标题' }
+                , { field: 'news_type', title: '类型',templet: function (data) {
+                    return data.news_type==1?'商户':'管理员'
+                    } }
+                , { field: 'userName', title: '发送人'}
+                , { field: 'news_createTime', title: '创建时间', templet: function (data) {
+                        if (data.news_createTime === null||data.news_createTime==='') {
+                            return "";
+                        }
+                        return layui.util.toDateString(data.news_createTime, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                }
+                , { field: 'news_verifiedTime', title: '审核时间' , templet: function (data) {
+                        if (data.news_verifiedTime === null||data.news_verifiedTime==='') {
+                            return "";
+                        }
+                        return layui.util.toDateString(data.news_verifiedTime, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                }
+                , { field: 'news_updatedTime', title: '最后修改时间' , templet: function (data) {
+                        if (data.news_updatedTime === null||data.news_updatedTime==='') {
+                            return "";
+                        }
+                        return layui.util.toDateString(data.news_updatedTime, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                }
+                , { field: 'news_status', title: '状态' ,templet:'#news_status'}
+                , { title: '操作', width: 250, align: 'center', fixed: 'right', toolbar: '#table-useradmin-webuser' }
+            ]]
+            , page: {
+                layout: ['count', 'prev', 'page', 'next',  'refresh', 'skip']
+            }
+            , limit: 10
+            , height: 'full-220'
+            , text: { none: '无数据' }
+        });
+
+        //监听工具条
+        table.on('tool(LAY-user-manage)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.prompt({
+                    formType: 1
+                    , title: '敏感操作，请验证口令'
+                }, function (value, index) {
+                    layer.close(index);
+
+
+                    if (value == 123456) {//口令
+                        layer.confirm('真的删除行么', function (index) {
+                            alert("我是要被删除的主键" + data.news_id)//被删除的主键
+
+                            //写ajax
+
+                            layer.close(index);
+                            table.reload('LAY-user-manage');
+                        });
+
+                    } else {
+                        layer.msg('口令错误');
+                    }
+
+                });
+            } else if (obj.event === 'edit') {
+                alert("我是要被修改的主键" + data.news_id)//操作行的主键
+                let news_id = data.news_id
+                layer.open({
+                    type: 2
+                    , title: '编辑'
+                    , content: 'usersform.html'
+                    , maxmin: true
+                    , area: ['500px', '450px']
+                    , btn: ['确定', '取消']
+                    , yes: function (index, layero) {
+                        var iframeWindow = window['layui-layer-iframe' + index]
+                            , submitID = 'LAY-user-front-submit'
+                            , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                        //监听提交
+                        iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+
+                            var field = data.field; //获取提交的字段
+                            field.userId = userId
+                            alert("我是被修改的内容" + JSON.stringify(field))//修改的内容
+
+
+                            //提交 Ajax 成功后，静态更新表格中的数据
+                            //$.ajax({});
+                            table.reload('LAY-user-manage'); //数据刷新
+                            layer.close(index); //关闭弹层
+                        });
+
+                        submit.trigger('click');
+                    }
+                    , success: function (layero, index) {
+                        var body = layui.layer.getChildFrame('body', index);
+
+                        //点击编辑后 ajax查询当前得用户信息, 把值从父页面传入Iframe页面
+                        body.find("#userName").val(data.userName);
+                        body.find("#userPhone").val(data.userPhone);
+                        body.find("#userEmail").val(data.userEmail);
+                        body.find("#userPhoto").val(data.userPhoto);
+                    }
+                });
+
+            } else if(obj.event === 'qz'){
+                layer.prompt({title: '权重', formType: 3,value:data.news_level}, function(value, index){
+                    layer.close(index);
+                })
+            }
+        });
+
+
+
+        //监听搜索
+        form.on('submit(LAY-user-front-search)', function (data) {
+
+            var field = data.field;
+            alert("我是搜索内容" + JSON.stringify(field))//搜索的值
+
+            //执行重载
+            table.reload('LAY-user-manage', {
+                where: field,
+            });
+        });
+
+        //事件
+        var active = {
+            batchdel: function () {
+                var checkStatus = table.checkStatus('LAY-user-manage')
+                    , checkData = checkStatus.data; //得到选中的数据
+
+                if (checkData.length === 0) {
+                    return layer.msg('请选择数据');
+                }
+                layer.prompt({
+                    formType: 1
+                    , title: '敏感操作，请验证口令'
+                }, function (value, index) {
+
+                    layer.close(index);
+
+                    if (value == 123456) {//口令
+                        layer.confirm('确定删除吗？', function (index) {
+                            let arr = new Array();
+                            for (let index = 0; index < checkData.length; index++) {
+                                arr[index] = checkData[index].news_id
+                            }
+
+                            alert("批量删除的主键数组" + arr)//主键数组
+
+                            //执行 Ajax 把要删除的主键数组传输后台    批量删除
+                            /*
+                            admin.req({
+                              url: 'xxx'
+                              //,……
+                            });
+                            */
+                            //重载
+                            layer.close(index);
+                            table.reload('LAY-user-manage');
+                            // layer.msg('已删除');
+                            //关闭弹出层
+
+                        });
+                    } else {
+                        layer.msg('口令错误');
+                    }
+
+
+                });
+            }
+            , add: function () {
+                 layer.open({
+                    type: 2
+                    , title: '添加'
+                    ,content: 'demo.html'
+                    , maxmin: true
+                    , area: ['100%', '100%']
+                    , success: function (layero, index) {
+
+                         var iframeWindow = window['layui-layer-iframe' + index]
+                             , submitID = 'LAY-user-front-submit11'//iframe.html的submit的id
+                             , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                         //监听提交
+                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+
+                             var field = data.field; //获取提交的字段
+                             alert("我是添加的内容" + JSON.stringify(field))
+                             //提交 Ajax 成功后，静态更新表格中的数据
+                             //$.ajax({});
+                             // table.reload('LAY-user-front-submit'); //数据刷新
+                             // layer.close(index); //关闭弹层
+                         });
+
+                         submit.trigger('click');
+                    }
+
+                });
+
+
+            }
+        };
+
+        $('.layui-btn.layuiadmin-btn-useradmin').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+
+</html>
