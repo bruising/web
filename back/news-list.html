@@ -81,7 +81,7 @@
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-down"></i>下架</a>
                 {{#  } }}
                 {{#  if(d.news_status ===3){ }}
-                <a class="layui-btn  layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-up"></i>上架</a>
+                <a class="layui-btn  layui-btn-xs" lay-event="shang"><i class="layui-icon layui-icon-up"></i>上架</a>
                 {{#  } }}
                 {{#  if(d.news_status ===2){ }}
                  <input type="checkbox" class="layui-input-block"  name="open" lay-skin="switch" lay-filter="switchTest" lay-text="已通过|待审">
@@ -167,16 +167,30 @@
                         , title: '敏感操作，请验证口令'
                     }, function (value, index) {
                         layer.close(index);
-
-
                         if (value == 123456) {//口令
                             layer.confirm('真的下架么', function (index) {
-                                alert("我是要被删除的主键" + data.news_id)//被删除的主键
-
-                                //写ajax
-
+                                $.ajax({
+                                    url:$url+"/delNews",
+                                    dataType:'json',
+                                    type:'post',
+                                    data:{'token':$token,'news_id':data.news_id},
+                                    success:function (res) {
+                                        switch (res.msg) {
+                                            case "success":
+                                                layer.msg('成功')
+                                                table.reload('LAY-user-manage'); //数据刷新
+                                                break;
+                                            case "failed":
+                                                layer.msg('失败')
+                                                break;
+                                            case "noToken":
+                                                sessionStorage.clear()
+                                                location.replace('login.html')
+                                                break;
+                                        }
+                                    }
+                                })
                                 layer.close(index);
-                                table.reload('LAY-user-manage');
                             });
 
                         } else {
@@ -254,6 +268,28 @@
                                 }
                             })
                             layer.close(index);
+                        }
+                    })
+                }else if(obj.event === 'shang'){
+                    $.ajax({
+                        url:$url+"/shang",
+                        dataType:'json',
+                        type:'post',
+                        data:{'token':$token,'news_id':data.news_id},
+                        success:function (res) {
+                            switch (res.msg) {
+                                case "success":
+                                    layer.msg('成功')
+                                    table.reload('LAY-user-manage'); //数据刷新
+                                    break;
+                                case "failed":
+                                    layer.msg('失败')
+                                    break;
+                                case "noToken":
+                                    sessionStorage.clear()
+                                    location.replace('login.html')
+                                    break;
+                            }
                         }
                     })
                 }
