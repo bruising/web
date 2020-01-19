@@ -33,7 +33,7 @@
         tinymce: '{/}./tinymce/tinymce'
     }).use(['tinymce', 'util', 'layer','form'], function () {
         var $ = layui.$
-            , form = layui.form
+             ,form = layui.form
             , upload = layui.upload
             ,tinymce = layui.tinymce
             ,util = layui.util;
@@ -47,7 +47,7 @@
             getContent: function () {
                 $('#edit').val(edit.getContent())
                 console.log(edit.getContent())
-
+                // edit.setContent()
                 layer.msg("展开控制台查看")
             }
         });
