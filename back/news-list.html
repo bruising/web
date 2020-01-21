@@ -80,12 +80,12 @@
                 {{#  if(d.news_status ==1){ }}
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-down"></i>下架</a>
                 {{#  } }}
-                {{#  if(d.news_status ===3){ }}
+                {{#  if(d.news_status ===3||d.news_status ===2){ }}
                 <a class="layui-btn  layui-btn-xs" lay-event="shang"><i class="layui-icon layui-icon-up"></i>上架</a>
                 {{#  } }}
-                {{#  if(d.news_status ===2){ }}
-                 <input type="checkbox" class="layui-input-block"  name="open" lay-skin="switch" lay-filter="switchTest" lay-text="已通过|待审">
-                {{#  } }}
+<!--                {{#  if(d.news_status ===2){ }}-->
+<!--                 <input type="checkbox" class="layui-input-block"  name="open" lay-skin="switch" lay-filter="switchTest" lay-text="已通过|待审">-->
+<!--                {{#  } }}-->
             </script>
         </div>
     </div>
@@ -104,14 +104,6 @@
             var $ = layui.$
                 , form = layui.form
                 , table = layui.table;
-
-            form.on('switch(switchTest)', function(data){
-                layer.msg('开关checked：'+ (this.checked ? 'true' : 'false'), {
-                    offset: '6px'
-                });
-                layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
-            });
-
 
 
             //用户管理
@@ -185,7 +177,7 @@
                                                 break;
                                             case "noToken":
                                                 sessionStorage.clear()
-                                                location.replace('login.html')
+
                                                 break;
                                         }
                                     }
@@ -199,44 +191,44 @@
 
                     });
                 } else if (obj.event === 'edit') {
-                    alert("我是要被修改的主键" + data.news_id)//操作行的主键
                     let news_id = data.news_id
                     layer.open({
                         type: 2
                         , title: '编辑'
-                        , content: 'usersform.html'
+                        , content: 'newsInfo.html'
                         , maxmin: true
-                        , area: ['500px', '450px']
-                        , btn: ['确定', '取消']
-                        , yes: function (index, layero) {
-                            var iframeWindow = window['layui-layer-iframe' + index]
-                                , submitID = 'LAY-user-front-submit'
-                                , submit = layero.find('iframe').contents().find('#' + submitID);
-
-                            //监听提交
-                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
-
-                                var field = data.field; //获取提交的字段
-                                field.userId = userId
-                                alert("我是被修改的内容" + JSON.stringify(field))//修改的内容
-
-
-                                //提交 Ajax 成功后，静态更新表格中的数据
-                                //$.ajax({});
-                                table.reload('LAY-user-manage'); //数据刷新
-                                layer.close(index); //关闭弹层
-                            });
-
-                            submit.trigger('click');
-                        }
+                        , area: ['100%', '100%']
                         , success: function (layero, index) {
                             var body = layui.layer.getChildFrame('body', index);
 
+
+                            $.ajax({
+                                url:$url+"/queryNewById",
+                                dataType:'json',
+                                type:'post',
+                                data:{'token':$token,'news_id':data.news_id},
+                                success:function (res) {
+                                    switch (res.msg) {
+                                        case "success":
+                                            // alert(JSON.stringify(res.data))
+                                            body.append(res.data)
+                                            break;
+                                        case "failed":
+                                            layer.msg('失败')
+                                            break;
+                                        case "noToken":
+                                            sessionStorage.clear()
+
+                                            break;
+                                    }
+                                }
+                            })
                             //点击编辑后 ajax查询当前得用户信息, 把值从父页面传入Iframe页面
-                            body.find("#userName").val(data.userName);
-                            body.find("#userPhone").val(data.userPhone);
-                            body.find("#userEmail").val(data.userEmail);
-                            body.find("#userPhoto").val(data.userPhoto);
+                            // body.find("#userName").val(data.userName);
+                            // body.find("#userPhone").val(data.userPhone);
+                            // body.find("#userEmail").val(data.userEmail);
+                            // body.find("#userPhoto").val(data.userPhoto);
+
                         }
                     });
 
@@ -262,7 +254,7 @@
                                             break;
                                         case "noToken":
                                             sessionStorage.clear()
-                                            location.replace('login.html')
+
                                             break;
                                     }
                                 }
@@ -287,7 +279,7 @@
                                     break;
                                 case "noToken":
                                     sessionStorage.clear()
-                                    location.replace('login.html')
+
                                     break;
                             }
                         }
@@ -372,11 +364,36 @@
                             iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
 
                                 var field = data.field; //获取提交的字段
-                                alert("我是添加的内容" + JSON.stringify(field))
+                                field.token=$token
+                                field.news_owner=$user.id
+                                if(field.news_title.length==0||field.news_text.length==0){
+                                    alert('不能是空')
+                                    return;
+                                }
+                                // alert("我是添加的内容" + JSON.stringify(field))
                                 //提交 Ajax 成功后，静态更新表格中的数据
-                                //$.ajax({});
-                                // table.reload('LAY-user-front-submit'); //数据刷新
-                                // layer.close(index); //关闭弹层
+                                $.ajax({
+                                    url:$url+"/add",
+                                    dataType:'json',
+                                    type:'post',
+                                    data:field,
+                                    success:function (res) {
+                                        switch (res.msg) {
+                                            case "success":
+                                                layer.msg('成功')
+                                                 table.reload('LAY-user-manage'); //数据刷新
+                                                break;
+                                            case "failed":
+                                                layer.msg('失败')
+                                                break;
+                                            case "noToken":
+                                                sessionStorage.clear()
+                                                break;
+                                        }
+                                    }
+                                })
+                                table.reload('LAY-user-manage'); //数据刷新
+                                layer.close(index); //关闭弹层
                             });
 
                             submit.trigger('click');
