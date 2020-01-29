@@ -119,21 +119,21 @@
                         } }
                     , { field: 'userName', title: '发送人'}
                     , { field: 'news_createTime', title: '创建时间', templet: function (data) {
-                            if (data.news_createTime === null||data.news_createTime==='') {
+                            if (data.news_createTime == null||data.news_createTime =='') {
                                 return "";
                             }
                             return layui.util.toDateString(data.news_createTime, 'yyyy-MM-dd HH:mm:ss');
                         }
                     }
                     , { field: 'news_verifiedTime', title: '审核时间' , templet: function (data) {
-                            if (data.news_verifiedTime === null||data.news_verifiedTime==='') {
+                            if (data.news_verifiedTime == null||data.news_verifiedTime =='') {
                                 return "";
                             }
                             return layui.util.toDateString(data.news_verifiedTime, 'yyyy-MM-dd HH:mm:ss');
                         }
                     }
                     , { field: 'news_updatedTime', title: '最后修改时间' , templet: function (data) {
-                            if (data.news_updatedTime === null||data.news_updatedTime==='') {
+                            if (data.news_updatedTime == null||data.news_updatedTime =='') {
                                 return "";
                             }
                             return layui.util.toDateString(data.news_updatedTime, 'yyyy-MM-dd HH:mm:ss');

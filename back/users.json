@@ -4,7 +4,7 @@
   "count": "100",
   "data": [
     {
-      "userId": 1,
+      "id": 1,
       "userName": "吴成卓",
       "userPhone": "19919990911",
       "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
@@ -13,7 +13,7 @@
       "userStatus": 1
     },
     {
-      "userId": 1,
+      "id": 1,
       "userName": "吴成卓",
       "userPhone": "19919990911",
       "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
@@ -22,7 +22,7 @@
       "userStatus": 1
     },
     {
-      "userId": 1,
+      "id": 1,
       "userName": "吴成卓",
       "userPhone": "19919990911",
       "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
@@ -31,7 +31,7 @@
       "userStatus": 1
     },
     {
-      "userId": 1,
+      "id": 1,
       "userName": "吴成卓",
       "userPhone": "19919990911",
       "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
@@ -40,7 +40,7 @@
       "userStatus": 1
     },
     {
-      "userId": 1,
+      "id": 1,
       "userName": "吴成卓",
       "userPhone": "19919990911",
       "userPhoto": "http://b-ssl.duitang.com/uploads/item/201803/30/20180330234706_stfoo.jpg",
