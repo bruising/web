@@ -273,6 +273,13 @@ $(function () {
     $(".js").mouseout(function () {
         $(".notice").css("display","none");
     })
+    //从前端服务器获取后端服务器地址
+    let $url = "";
+    $.get('serverconfig.json', function (responseText, textStatus, XMLHttpRequest) {
+        $url = responseText.protocol + responseText.domain + responseText.port + responseText.context;
+        sessionStorage.setItem('url',JSON.stringify($url))
+    });
+
 })
 </script>
 </body>

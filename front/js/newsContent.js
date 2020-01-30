@@ -1,11 +1,8 @@
 var vue = new Vue({     //创建一个Vue的实例
     el:"#app",  //挂载点是id="app"的地方
     data:{
-        programs:{
-            programContent:'',
-            programStatus:''
-        },
-        news:{}
+        news:{},
+        url:JSON.parse(sessionStorage.getItem('url'))
     },
     methods:{
         search: function() {
@@ -21,12 +18,16 @@ var vue = new Vue({     //创建一个Vue的实例
         //初始化数据
         xinwen: function () {
             var _this = this;
-            axios.get("http://39.105.20.225:8081/indexInit").then(function (response) {
-                var map = JSON.parse(response.data.data)
-                console.log(map)
-                _this.programs = map.programsContent;
-                console.log(_this.programs.programContent)
-                _this.news = map.newestNews;
+            var newsId = localStorage.getItem("newsId");
+            if (newsId == null) {
+                window.location.href = "index.html"
+            }
+            var params = new URLSearchParams();
+            params.append("id",newsId);
+            axios.post(_this.url+"/QueryByID",params).then(function (response) {
+                var newss = JSON.parse(response.data.data)
+                console.log(newss)
+                _this.news = newss;
                 console.log(_this.news)
             })
         },

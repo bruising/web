@@ -6,6 +6,7 @@
     <title>新闻中心</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/news.css">
+    <link rel="stylesheet" href="layui/css/layui.css">
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2.0.0-rc.2"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -35,14 +36,21 @@
                     <div class="liebiao_z_k fl">
                         <div class="liebiao_neirong fl">
                             <ul>
-                                <li v-for="(eachNews,index) in newsList"><a href="#">{{eachNews.newsTitle}}</a> <span
-                                        style="float:right;">[{{dateFormat(eachNews.newsCreatedTime)}}]</span></li>
+                                <li v-for="(eachNews,index) in newsList"><a @click="getNews(eachNews.news_id)" href="#">{{eachNews.news_title}}</a> <span
+                                        style="float:right;">[{{dateFormat(eachNews.news_createTime)}}]</span></li>
                             </ul>
                         </div>
 
                         <!--fenye-->
                         <div class="fenye fl">
                             <div class="fenye_nr fl">
+
+
+
+                                            <div align="center" id="test-laypage-demo2"></div>
+
+
+
 
                             </div>
                         </div>
@@ -83,5 +91,6 @@
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="js/axios-0.18.0.js"></script>
 <script src="js/news.js"></script>
+<script src="layui/layui.js"></script>
 </body>
 </html>
