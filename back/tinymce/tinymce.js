@@ -5,6 +5,7 @@ layui.define(['jquery'],function (exports) {
     var $ = layui.$
 
     var modFile = layui.cache.modules['tinymce'];
+    var $url=JSON.parse(sessionStorage.getItem('url'))
 
     var modPath = modFile.substr(0, modFile.lastIndexOf('.'))
 
@@ -14,7 +15,7 @@ layui.define(['jquery'],function (exports) {
 
     var settings = {
         base_url: modPath
-        , images_upload_url: 'http://localhost:8080/doUpload'//图片上传接口
+        , images_upload_url: $url+'/doUpload'//图片上传接口
         , language: 'zh_CN'
         , response: {
             statusName: response.statusName || 'code'//返回状态字段

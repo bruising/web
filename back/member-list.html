@@ -184,7 +184,7 @@
 
                    });
                } else if (obj.event === 'edit') {
-                   alert("我是要被修改的主键" + data.id)//操作行的主键
+                   // alert("我是要被修改的主键" + data.id)//操作行的主键
                    let userId = data.id
                    layer.open({
                        type: 2
@@ -275,7 +275,7 @@
            form.on('submit(LAY-user-front-search)', function (data) {
 
                var field = data.field;
-               alert("我是搜索内容" + JSON.stringify(field))//搜索的值
+               // alert("我是搜索内容" + JSON.stringify(field))//搜索的值
 
                //执行重载
                table.reload('LAY-user-manage', {
