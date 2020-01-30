@@ -17,7 +17,14 @@
             },
             getNews: function (news_id) {
                 localStorage.setItem("newsId",news_id);
-                window.location.href = "newsContent.html"
+                var params=new URLSearchParams();
+                params.append('news_id',news_id);
+                axios.post(this.url+"/addNewsIndex",params).then(function (response) {
+                    if(response.data.code==='0'){
+                        window.location.href = "newsContent.html"
+                    }
+                })
+
             },
             //初始化数据
             xinwen: function () {
@@ -33,7 +40,7 @@
                             ,first: "首页"
                             , last: "尾页"
                             ,limit:5
-                            ,layout: ['prev', 'page', 'next']
+                            ,layout: ['prev', 'page', 'next', 'skip']
                             ,jump: function(obj,first){
                                 //obj包含了当前分页的所有参数，比如：
                                 console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
