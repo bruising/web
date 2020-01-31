@@ -29,21 +29,24 @@
 <script>
 
 
-    let $url = "";
-    $.get('serverconfig.json', function (responseText, textStatus, XMLHttpRequest) {
-        $url = responseText.protocol + responseText.domain + responseText.port + responseText.context;
-    });
-
-    let $token=JSON.parse(sessionStorage.getItem('token'))
+    // let $url = "";
+    // $.get('serverconfig.json', function (responseText, textStatus, XMLHttpRequest) {
+    //     $url = responseText.protocol + responseText.domain + responseText.port + responseText.context;
+    // });
+    //
+    // let $token=JSON.parse(sessionStorage.getItem('token'))
     $(function () {
-
+        let $user=JSON.parse(sessionStorage.getItem('user'))
+        let $url=JSON.parse(sessionStorage.getItem('url'))
+        let $token=JSON.parse(sessionStorage.getItem('token'))
         layui.use('table', function () {
             var  table=layui.table;
-
+    alert($url)
             //用户管理
             table.render({
                 elem: '#LAY-user-manage'
                 , url: $url+'/queryAdministrator' //模拟接口
+                ,method:'post'
                 , cols: [[
                     { type: 'checkbox', fixed: 'left' },
                     { type: 'numbers', width: 80, title: '序号', sort: true }
@@ -63,7 +66,8 @@
                                 return "待审核";
                             }else{
                                 return "停用";
-                            }}}
+                            }
+                    }}
                     , { title: '操作', width: 150, align: 'center', fixed: 'right', toolbar: '#table-useradmin-webuser' }
                 ]]
                 , page: false
