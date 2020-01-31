@@ -3,8 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <link rel="stylesheet" href="lib/layui/css/layui.css" media="all">
+    <script src="js/jquery.min.js"></script>
 </head>
 <body>
+<script src="lib/layui/layui.js"></script>
 管理员列表
+<table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
+<script type="text/html" id="imgTpl">
+    <img style="display: inline-block; width: 50%; height: 100%;"  src="{{ d.userPhoto }}">
+</script>
+
+<script type="text/html" id="table-useradmin-webuser">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+   {{#  if(d.userStatus ==1){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>停用</a>
+   {{#  } }}
+   {{#  if(d.userStatus ===3||d.userStatus ===2){ }}
+    <a class="layui-btn  layui-btn-xs" lay-event="shang"><i class="layui-icon layui-icon-up"></i>启用</a>
+    {{#  } }}
+
+</script>
+
+<script>
+
+
+    let $url = "";
+    $.get('serverconfig.json', function (responseText, textStatus, XMLHttpRequest) {
+        $url = responseText.protocol + responseText.domain + responseText.port + responseText.context;
+    });
+
+    let $token=JSON.parse(sessionStorage.getItem('token'))
+    $(function () {
+
+        layui.use('table', function () {
+            var  table=layui.table;
+
+            //用户管理
+            table.render({
+                elem: '#LAY-user-manage'
+                , url: $url+'/queryAdministrator' //模拟接口
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' },
+                    { type: 'numbers', width: 80, title: '序号', sort: true }
+                    , { field: 'userName', title: '昵称', minWidth: 100 }
+                    , { field: 'userPhone', title: '电话', minWidth: 100 }
+                    , { field: 'userPhoto', title: '头像', width: 100, templet: '#imgTpl' }
+                    , { field: 'userEmail', title: '邮箱' }
+                    , { field: 'userRole', title: '角色',templet: function (data) {
+                            if(data.userRole==5){
+                                return '子管理员'
+                            }
+                            return ''    } }
+                    , { field: 'userStatus', title: '状态' ,templet: function (data) {
+                            if(data.userStatus == 1){
+                                return "正常";
+                            }else if(data.userStatus == 2){
+                                return "待审核";
+                            }else{
+                                return "停用";
+                            }}}
+                    , { title: '操作', width: 150, align: 'center', fixed: 'right', toolbar: '#table-useradmin-webuser' }
+                ]]
+                , page: false
+                , height: 'full-220'
+                , text: { none: '无数据' }
+            });
+
+          table.on('tool(LAY-user-manage)', function (obj) {
+                var data = obj.data;
+
+                if (obj.event === 'del') {
+                    layer.prompt({
+                        formType: 1
+                        , title: '敏感操作，请验证口令'
+                    }, function (value, index) {
+                        layer.close(index);
+
+
+                        if (value == 123456) {//口令
+                            layer.confirm('确定么', function (index) {
+                                $.ajax({
+                                    url:$url+"/delUsers",
+                                    dataType:'json',
+                                    type:'post',
+                                    data:{'token':$token,'id':data.id},
+                                    success:function (res) {
+                                        alert(res.msg);
+                                        switch (res.msg) {
+                                            case "success":
+                                                layer.msg('成功')
+                                                table.reload('LAY-user-manage'); //数据刷新
+                                                break;
+                                            case "failed":
+                                                layer.msg('失败')
+                                                break;
+                                            case "noToken":
+                                                sessionStorage.clear()
+                                                break;
+                                        }
+                                    }
+                                })
+
+                                layer.close(index);
+                                // table.reload('LAY-user-manage');
+                            });
+
+                        } else {
+                            layer.msg('口令错误');
+                        }
+
+                    });
+                } else if (obj.event === 'edit') {
+                    // alert("我是要被修改的主键" + data.id)//操作行的主键
+                    let userId = data.id
+                    layer.open({
+                        type: 2
+                        , title: '编辑'
+                        , content: 'usersform.html'
+                        , maxmin: true
+                        , area: ['500px', '450px']
+                        , btn: ['确定', '取消']
+                        , yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index]
+                                , submitID = 'LAY-user-front-submit'
+                                , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+
+                                var field = data.field; //获取提交的字段
+                                field.id = userId
+                                // alert("我是被修改的内容" + JSON.stringify(field))//修改的内容
+                                $.ajax({
+                                    url:$url+"/updateUserById",
+                                    dataType:'json',
+                                    type:'post',
+                                    data:field,
+                                    success:function (res) {
+                                        switch (res.msg) {
+                                            case "success":
+                                                layer.msg('成功')
+                                                table.reload('LAY-user-manage'); //数据刷新
+                                                break;
+                                            case "failed":
+                                                layer.msg('失败')
+                                                break;
+                                            case "noToken":
+                                                sessionStorage.clear()
+
+                                                break;
+                                        }
+                                    }
+                                })
+                                //提交 Ajax 成功后，静态更新表格中的数据
+                                //$.ajax({});
+                                // table.reload('LAY-user-manage'); //数据刷新
+                                layer.close(index); //关闭弹层
+                            });
+
+                            submit.trigger('click');
+                        }
+                        , success: function (layero, index) {
+                            var body = layui.layer.getChildFrame('body', index);
+
+                            //点击编辑后 ajax查询当前得用户信息, 把值从父页面传入Iframe页面
+                            body.find("#userName").val(data.userName);
+                            body.find("#userPhone").val(data.userPhone);
+                            body.find("#userEmail").val(data.userEmail);
+                            body.find("#userPhoto").val(data.userPhoto);
+                        }
+                    });
+
+                }else if(obj.event === 'shang'){
+                    $.ajax({
+                        url:$url+"/qiyong",
+                        dataType:'json',
+                        type:'post',
+                        data:{'token':$token,'id':data.id},
+                        success:function (res) {
+                            switch (res.msg) {
+                                case "success":
+                                    layer.msg('成功')
+                                    table.reload('LAY-user-manage'); //数据刷新
+                                    break;
+                                case "failed":
+                                    layer.msg('失败')
+                                    break;
+                                case "noToken":
+                                    sessionStorage.clear()
+
+                                    break;
+                            }
+                        }
+                    })
+                }
+            });
+
+        });
+    })
+
+</script>
 </body>
 </html>
