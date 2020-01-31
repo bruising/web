@@ -50,12 +50,11 @@
 
                         </div>
                         <div class="neirong_qianhou fl">
-                            <div class="neirong_qian fl">
-                                <span>上一篇：</span>
-                                <a href="#">【ABB1】恭喜W先生获得澳洲投资移民签证</a>
+                            <div class="neirong_qian fl" v-if="shang">
+                                <a href="#" @click="getsNews(snew.news_id,snew.num)"><span>上一篇：</span>{{snew.news_title}}</a>
                             </div>
-                            <div class="neirong_hou fl">
-                                <a href="#"><span>下一篇：</span>恭喜L先生喜获188B投资移民签证</a>
+                            <div class="neirong_hou fl" v-if="xia">
+                                <a href="#" @click="getxNews(xnew.news_id,xnew.num)"><span>下一篇：</span>{{xnew.news_title}}</a>
                             </div>
                         </div>
 

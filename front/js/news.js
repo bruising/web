@@ -15,8 +15,8 @@
                     console.log(keyword);
                 }
             },
-            getNews: function (news_id) {
-                localStorage.setItem("newsId",news_id);
+            getNews: function (news_id,num) {
+                localStorage.setItem("num",num);
                 var params=new URLSearchParams();
                 params.append('news_id',news_id);
                 axios.post(this.url+"/addNewsIndex",params).then(function (response) {
@@ -45,6 +45,7 @@
                                 //obj包含了当前分页的所有参数，比如：
                                 console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
                                 console.log(obj.limit); //得到每页显示的条数
+                                localStorage.setItem("count",response.data.count);
                                 //首次不执行
                                 if(!first){
                                     //do something

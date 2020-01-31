@@ -36,7 +36,7 @@
                     <div class="liebiao_z_k fl">
                         <div class="liebiao_neirong fl">
                             <ul>
-                                <li v-for="(eachNews,index) in newsList"><a @click="getNews(eachNews.news_id)" href="#">{{eachNews.news_title}}</a> <span
+                                <li v-for="(eachNews,index) in newsList"><a @click="getNews(eachNews.news_id,eachNews.num)" href="#">{{eachNews.news_title}}</a> <span
                                         style="float:right;">[{{dateFormat(eachNews.news_createTime)}}]</span></li>
                             </ul>
                         </div>
