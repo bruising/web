@@ -7,19 +7,18 @@ var vue = new Vue({ //创建一个Vue的实例
     methods: {
         //加载数据
         getPrograms: function(programId) {
+            var _this=this
             var params = new URLSearchParams();
             params.append('programId', programId);
-            axios.post(this.url + "program/searchProgramInfo", params).then(function(response) {
-                this.program = response.data.data;
-                console.log(this.program.programTitle)
+            axios.post(_this.url + "program/searchProgramInfo", params).then(function(response) {
+                _this.program = response.data.data;
+                console.log(JSON.stringify(_this.program))
             })
 
         },
     },
     created() {
-        /*laypage分页*/
-        // this.xinwen();
-        /*element-ui 分页*/
+
         this.getPrograms(4)
     },
     mounted() {
