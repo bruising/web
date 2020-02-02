@@ -15,6 +15,8 @@
         <!--[if lt IE 9]>
           <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
           <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+           <script  src="js/vue.js"></script>
+
         <![endif]-->
     </head>
     <body onload="startTime()">
@@ -34,48 +36,48 @@
                         <div class="layui-card-header">数据统计</div>
                         <div class="layui-card-body ">
                             <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
-                                <li class="layui-col-md2 layui-col-xs6">
+                                <li class="layui-col-md3 layui-col-xs4">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>文章数</h3>
+                                        <h3>新闻数</h3>
                                         <p>
-                                            <cite>66</cite></p>
+                                            <cite  id="news"></cite></p>
                                     </a>
                                 </li>
-                                <li class="layui-col-md2 layui-col-xs6">
+                                <li class="layui-col-md3 layui-col-xs4">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>会员数</h3>
+                                        <h3>用户数</h3>
                                         <p>
-                                            <cite>12</cite></p>
+                                            <cite  id="user"></cite></p>
                                     </a>
                                 </li>
-                                <li class="layui-col-md2 layui-col-xs6">
+                                <li class="layui-col-md3 layui-col-xs4">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>回复数</h3>
+                                        <h3>商家数</h3>
                                         <p>
-                                            <cite>99</cite></p>
+                                            <cite id="business"></cite></p>
                                     </a>
                                 </li>
-                                <li class="layui-col-md2 layui-col-xs6">
+                               <!-- <li class="layui-col-md2 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
                                         <h3>商品数</h3>
                                         <p>
                                             <cite>67</cite></p>
                                     </a>
-                                </li>
-                                <li class="layui-col-md2 layui-col-xs6">
+                                </li>-->
+                                <li class="layui-col-md3 layui-col-xs4">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>文章数</h3>
+                                        <h3>项目数</h3>
                                         <p>
-                                            <cite>67</cite></p>
+                                            <cite  id="programs">67</cite></p>
                                     </a>
                                 </li>
-                                <li class="layui-col-md2 layui-col-xs6 ">
+                               <!-- <li class="layui-col-md2 layui-col-xs6 ">
                                     <a href="javascript:;" class="x-admin-backlog-body">
                                         <h3>文章数</h3>
                                         <p>
                                             <cite>6766</cite></p>
                                     </a>
-                                </li>
+                                </li>-->
                             </ul>
                         </div>
                     </div>
@@ -202,12 +204,28 @@
         </div>
         </div>
     </body>
+
     <script>
         $(function () {
             let $user=JSON.parse(sessionStorage.getItem('user'))
             let $url=JSON.parse(sessionStorage.getItem('url'))
             let $token=JSON.parse(sessionStorage.getItem('token'))
             $('#username').text($user.userName)
+             $.ajax({
+                 type:"get",
+                 url:$url+"/welcome",
+                 dataType:"json",
+                 success:function (data) {
+                     $("#news").html(data.newsCounts);
+                     $("#user").html(data.userCount);
+                     $("#business").html(data.BusinessCount);
+                     $("#programs").html(data.programsCount);
+                 },error:function () {
+                      alert("error")
+                 }
+             })
+
+
         })
         function startTime()
         {
@@ -242,5 +260,15 @@
             }
             return i;
         }
+
+
+
     </script>
+
+  <script>
+
+
+  </script>
+
+
 </html>
