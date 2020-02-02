@@ -3,10 +3,6 @@ var vue = new Vue({     //创建一个Vue的实例
     data:{
         keyword:'',
         logined:false, //判断是否登录
-        programs:{
-            programContent:'',
-            programStatus:''
-        },
         firms:{},
         user:{},
         news:{},
@@ -45,43 +41,36 @@ var vue = new Vue({     //创建一个Vue的实例
         test:function(id){
             alert(id)
         },
-        // resetToken: function (token) {
-        //     var params = new URLSearchParams();
-        //     params.append('token', token);
-        //     axios.post("http://localhost:8081/resetToken",params).then((response)=> {
-        //         console.log(response.data.data)
-        //     })
-        // },
-        // refresh_user:function(){
-        //     //从sessionStorage中取出当前用户
-        //     let activeUser= JSON.parse(sessionStorage.getItem("user"));
-        //     //取出sessionStorage中的token
-        //     let token = sessionStorage.getItem("token");
-        //     //判断是不是空
-        //     if (activeUser == null || token == null) {
-        //         this.logined =false;
-        //     }
-        //     //通过token获取缓存中的用户
-        //     var params = new URLSearchParams();
-        //     params.append('token', token);
-        //     axios.post("http://localhost:8081/isLogin",params,{
-        //         headers: {
-        //             Authorization:token
-        //         }
-        //     }).then((response)=>{
-        //
-        //         this.user = JSON.parse(response.data.data);
-        //         if(this.user.userId == activeUser.userId){
-        //             console.log("判断成功")
-        //             this.logined = true;
-        //             this.user = activeUser;
-        //         }
-        //         console.log(this.user)
-        //     }).catch(function (err) {
-        //         console.log(err)
-        //     })
-        //     this.resetToken(token);
-        // },
+        refresh_user:function(){
+            //从sessionStorage中取出当前用户
+            let activeUser= JSON.parse(sessionStorage.getItem("user"));
+            //取出sessionStorage中的token
+            let token = sessionStorage.getItem("token");
+            //判断是不是空
+            if (activeUser == null || token == null) {
+                this.logined =false;
+            }
+            //通过token获取缓存中的用户
+            var params = new URLSearchParams();
+            params.append('token', token);
+            // alert(this.url)
+            axios.post(this.url+"/isLogin",params,{
+                headers: {
+                    token:token
+                }
+            }).then((response)=>{
+                var tokenuser = JSON.parse(response.data.data);
+                console.log(response.data)
+                if(activeUser.id == tokenuser.id){
+                    this.logined = true;
+                    this.user = tokenuser;
+                }
+                console.log(this.user)
+            }).catch(function (err) {
+                console.log(err)
+            })
+
+        },
         //首页初始化数据
         init: function () {
             var _this = this;
@@ -115,6 +104,6 @@ var vue = new Vue({     //创建一个Vue的实例
     },
     mounted(){
         //刷新当前用户
-        // this.refresh_user();
+        this.refresh_user();
     }
 })
