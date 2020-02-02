@@ -7,7 +7,8 @@ var head = new Vue({     //创建一个Vue的实例
             programContent:'',
             programStatus:''
         },
-        user:{}
+        user:{},
+        url:JSON.parse(sessionStorage.getItem('url')),
     },
     methods:{
         search: function() {
@@ -31,13 +32,7 @@ var head = new Vue({     //创建一个Vue的实例
 
             });
         },
-        resetToken: function (token) {
-            var params = new URLSearchParams();
-            params.append('token', token);
-            axios.post("http://localhost:8081/resetToken",params).then((response)=> {
-                console.log(response.data.data)
-            })
-        },
+
         refresh_user:function(){
             //从sessionStorage中取出当前用户
             let activeUser= JSON.parse(sessionStorage.getItem("user"));
@@ -50,18 +45,22 @@ var head = new Vue({     //创建一个Vue的实例
             //通过token获取缓存中的用户
             var params = new URLSearchParams();
             params.append('token', token);
-            axios.post("http://localhost:8081/isLogin",params).then((response)=>{
-                this.user = JSON.parse(response.data.data);
-                if(this.user.userId == activeUser.userId){
-                    console.log("判断成功")
+            alert(this.url)
+            axios.post(this.url+"/isLogin",params,{
+                headers: {
+                    token:token
+                }
+            }).then((response)=>{
+                var tokenuser = JSON.parse(response.data.data);
+                console.log(response.data)
+                if(activeUser.id == tokenuser.id){
                     this.logined = true;
-                    this.user = activeUser;
+                    this.user = tokenuser;
                 }
                 console.log(this.user)
             }).catch(function (err) {
                 console.log(err)
             })
-            this.resetToken(token);
         },
         //时间格式化函数，此处仅针对yyyy-MM-dd hh:mm:ss 的格式进行格式化
         dateFormat:function(time) {

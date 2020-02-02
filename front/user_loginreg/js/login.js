@@ -6,7 +6,7 @@ $(function(){
 		});
 
 	var tab = 'account_number';
-	var codenumber;
+	// var codenumber;
 	// 选项卡切换
 	$(".account_number").click(function () {
 		$('.tel-warn').addClass('hide');
@@ -86,12 +86,6 @@ $(function(){
 				$(".log-btn").removeClass("off");
 				sendBtn();
 			} else {
-//				if(phone == ''){
-//					$('.tel-warn').removeClass('hide').text('请输入手机号');
-//				}
-//				if(code2 == ''){
-//					$('.code-warn').removeClass('hide').text('请输入验证码');
-//				}
 				$(".log-btn").addClass("off");
 			}
 		}
@@ -117,21 +111,6 @@ $(function(){
 		}
 	}
 
-	function checkCode(code){
-		if (code == '') {
-			//$('.code-warn').removeClass('hide').text('请输入验证码');
-			return false;
-		}else if(code == codenumber){
-			$('.code-warn').addClass('hide');
-			alert("我可以登陆了！！！");
-			return true;
-		}else {
-			//$('.code-warn').addClass('hide');
-			$('.code-warn').removeClass('hide');
-			return false;
-		}
-	}
-
 	function checkPhone(phone){
 		var status = true;
 		if (phone == '') {
@@ -145,33 +124,9 @@ $(function(){
 			$('.num2-err').text('手机号不合法，请重新输入');
 			return false;
 		}
-
-		$.post(getRootPath() + "/isPhoneExists",{
-			phone:phone
-		},function(data){
-			if (data.code == 2001) {
-				$('.num2-err').addClass('hide'); //手机号存在
-				status = true;
-			} else {
-				$('.num2-err').removeClass('hide').text(data.message); //手机号不存在
-				status = false;
-
-			}
-		},'json').fail(function(){
-			status = false;
-		});
-		return status;
+		return true;
 	}
 
-	function checkPhoneCode(pCode){
-		if (pCode == '') {
-			$('.error').removeClass('hide').text('请输入验证码');
-			return false;
-		} else {
-			$('.error').addClass('hide');
-			return true;
-		}
-	}
 
 	// 登录点击事件
 	function sendBtn(){
@@ -182,35 +137,18 @@ $(function(){
 				var inp = $.trim($('#num').val());
 				var pass = $.trim($('#pass').val());
 				if (checkAccount(inp) && checkPass(pass)) {
-					//var ldata = {unknowLogin:inp,pwd:pass};
-/*					if (!$('.code').hasClass('hide')) {
-						code = $.trim($('#veri').val());
-						if (!checkCode(code)) {
-							return false;
-						}
-						ldata.code = code;
-					}*/
-
-					$.post(getRootPath() + "/doLogin",{
+					$.post(getRootPath() + "/frontLogin",{
 						'userPhone':inp,
-						'pwd':pass
+						'userPassword':pass
 					},function(data){
-						if (data.code == 2001) {
-							// globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
-							var map = JSON.parse(data.data);
-							console.log(map);
-							sessionStorage.setItem("user",JSON.stringify(map.user));
-							sessionStorage.setItem("token",map.token);
+						if (data.code == 0) {
+							sessionStorage.setItem("user",JSON.stringify(data.data));
+							sessionStorage.setItem("token",data.token);
 							$(location).attr('href','../index.html');
-						} else if(data.code == 2002){
+						} else if(data.code == 4){
 							$(".log-btn").off('click').addClass("off");
-							$('.pass-err').removeClass('hide').find('em').text(data.message);
+							$('.pass-err').removeClass('hide').find('em').text(data.msg);
 							$('.pass-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
-							return false;
-						} else if(data.code == 2003){
-							$(".log-btn").off('click').addClass("off");
-							$('.num-err').removeClass('hide').find('em').text(data.message);
-							$('.num-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
 							return false;
 						}
 					},'json');
@@ -223,24 +161,19 @@ $(function(){
 				// var type = 'phone';
 				var phone = $.trim($('#num2').val());
 				var pcode = $.trim($('#veri-code').val());
-
-				if (checkPhone(phone) && checkCode(pcode)) {
-
-					//doPhoneLogin
-					$.post(getRootPath() + "/doPhoneLogin",{
+				if (checkPhone(phone)&&pcode!='') {
+					$.post(getRootPath() + "/frontPhoneLogin",{
 						phone:phone,
 						code:pcode
 					},function(data){
 						if (data.code == 2001) {
 							//globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
-							var map = JSON.parse(data.data);
-							console.log(map);
-							sessionStorage.setItem("user",JSON.stringify(map.user));
-							sessionStorage.setItem("token",map.token);
+							sessionStorage.setItem("user",JSON.stringify(data.map.data));
+							sessionStorage.setItem("token",data.map.token);
 							$(location).attr('href', '../index.html');
-						} else if(data.code == 2003) {
+						} else if(data.code == 2004) {
 							$(".log-btn").off('click').addClass("off");
-							$('.num2-err').removeClass('hide').text(data.message);
+							$('.num2-err').removeClass('hide').text("failed");
 							return false;
 						}
 					},'json');
@@ -254,15 +187,7 @@ $(function(){
 	}
 
 	function getRootPath() {
-	    /*//获取当前网址，如： http://localhost:8088/test/test.jsp
-	    var curPath = window.document.location.href;
-		//获取主机地址之后的目录，如： test/test.jsp
-		var pathName = window.document.location.pathname;
-		var pos = curPath.indexOf(pathName);
-	    //获取主机地址，如： http://localhost:8088
-	    var localhostPath = curPath.substring(0, pos);
-		return (localhostPath);*/
-	    return "http://localhost:8081";
+	    return JSON.parse(sessionStorage.getItem('url'));
 	}
 	
 	// 登录的回车事件
@@ -276,15 +201,15 @@ $(function(){
 	$(".form-data").delegate(".send","click",function () {
 		var phone = $.trim($('#num2').val());
 		if (checkPhone(phone)) {
-			$.post(getRootPath() + "/sendRandomNumber",{
+			$.post(getRootPath() + "/message",{
 				phone:phone
 			},function(data){
-				if (data.code == 2002) {
-					$('.num2-err').removeClass('hide').text("验证码发送失败");
+				if (data.code == 0) {
+					$('.num2-err').removeClass('hide').text(data.msg);
 				} else {
-					$('.num2-err').removeClass('hide').text("验证码发送成功");
-					codenumber = JSON.parse(data.data).verCode;
-					console.log(codenumber);
+					$('.num2-err').removeClass('hide').text(data.msg);
+					// codenumber = JSON.parse(data.data).verCode;
+					// console.log(codenumber);
 				}
 			},'json');
 	       	var oTime = $(".form-data .time"),

@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>项目介绍</title>
+    <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="css/program.css">
-    <script src="js/jquery-3.4.1.min.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2.0.0-rc.2"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
@@ -16,24 +16,22 @@
     <!--#include file="header.html" -->
     <div id="app">
         <div class=" w100 fl">
-            <div class="w1200 fz abb_xiangmu_bt" v-for="program">{{program.programTitle}}<span>项目介绍</span></div>
+            <div class="w1200 fz abb_xiangmu_bt">{{program.programTitle}}<span>项目介绍</span></div>
         </div>
 
         <div class="w100 fl abb_xmjs">
             <div class="w1200 fz">
                 <div class="abb_liangdian fl">
-                    <div class="abb_liangdian_bt fl">MINT项目亮点</div>
-                    <div class="abb_liangdina_nr fl">北领地州政府独家授权优先审批<br>优先获得州担保政府下签保证<br>无需学习、工作、经商背景要求</div>
-                    <div class="abb_liangdain_zx fl"><a href="javascript:void(0);">立即咨询 >> </a></div>
-                    <div class="abb_liangdian_gg fl">
-                        <a href="#"><img src="images/132_gg.png"></a>
-                    </div>
+                    <div class="abb_liangdian_bt fl">所属国家</div>
+                    <div class="abb_liangdina_nr fl">{{program.country}}</div>
+                    <div class="abb_liangdian_bt fl">联系方式</div>
+                    <div class="abb_liangdina_nr fl">{{program.programPhone}}</div>
                 </div>
 
                 <div class="abb_xiangmu_js fl">
                     <div class="abb_xiangmu_js_t fl">
                         <div class="abb_xiangmu_tu fl"><img src="images/mint_js_tu.png"></div>
-                        <div class="abb_xiangmu_js_nr fl"><span>澳洲北领地创新移民计划（MINT项目）</span>{{programs.programComment}}</div>
+                        <div class="abb_xiangmu_js_nr fl"><span>澳洲北领地创新移民计划（MINT项目）</span>{{program.programInfo}}</div>
 
                         <div class="abb_xiangmu_js_zx fl"><a href="javascript:void(0);">立即咨询 >> </a></div>
                     </div>
@@ -57,31 +55,67 @@
             <div class="w1200 fz abb_xiangmu_ys">
                 <div class="abb_youshi_z fl">
                     <div class="abb_youshi_rq fl">MINT项目必备条件</div>
+                    <ul>
+                        <li v-for="(require,index) in programRequireList">
+                            <div class="abb_youshi_rq_bj fl mt-30">
+                                {{require}}
+                            </div>
+                        </li>
+                    </ul>
+                    <!--                    <a href="javascript:void(0);">-->
+                    <!--                        <div class="abb_youshi_rq_bj fl mt-30"><span>MINT适应人群<br></span>有意低成本投资移民澳洲&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 希望直接获得绿卡身份的-->
+                    <!--                            <br>计划低风险投资的、期望一步到位全家移民</div>-->
+                    <!--                    </a>-->
 
-                    <a href="javascript:void(0);">
-                        <div class="abb_youshi_rq_bj fl mt-30"><span>MINT适应人群<br></span>有意低成本投资移民澳洲&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 希望直接获得绿卡身份的
-                            <br>计划低风险投资的、期望一步到位全家移民</div>
-                    </a>
+                    <!--                    <a href="javascript:void(0);">-->
+                    <!--                        <div class="abb_youshi_rq_bj fl"><span><br></span>{{program.programRequire}}</div>-->
+                    <!--                    </a>-->
 
-                    <a href="javascript:void(0);">
-                        <div class="abb_youshi_rq_bj fl"><span>MINT必备条件<br></span>您必须表现出积极投资的愿望，包括：<br> 投资者需向“北领地创新投资基金”投资 50 万澳元</div>
-                    </a>
+                    <!--                    <a href="javascript:void(0);">-->
+                    <!--                        <div class="abb_youshi_rq_bj fl"><span>MINT投资额分配<br></span>其中40万澳币将用于购买政府债券，期限为5年<br> 剩余10万澳币将投资于风险基金，最长不超过10年-->
+                    <!--                        </div>-->
+                    <!--                    </a>-->
 
-                    <a href="javascript:void(0);">
-                        <div class="abb_youshi_rq_bj fl"><span>MINT投资额分配<br></span>其中40万澳币将用于购买政府债券，期限为5年<br> 剩余10万澳币将投资于风险基金，最长不超过10年
-                        </div>
-                    </a>
 
-                    <div class="abbyoushi_rq_gg fl">
-                        <a href="javascript:void(0);"><img src="images/renqunyaoqiu_gg1.png"></a>
-                    </div>
+
+                    <!--                    <div class="abbyoushi_rq_gg fl">-->
+
+                    <!--                        <a href="javascript:void(0);"><img src="images/renqunyaoqiu_gg1.png"></a>-->
+                    <!--                    </div>-->
                 </div>
 
 
                 <div class="abb_youshi_y fl">
-                    <div class="abb_youshi_liangdian fl">MINT项目优势分析</div>
+                    <div class="abb_youshi_liangdian fl">MINT合作商户</div>
 
                     <div class="abbyoushi_liangdian_nr fl">
+
+                        <ul>
+                            <li v-for="(firm,index) in firmNameList">
+                                <div class="abb_xiangmu_abb_gg_tu fl">
+                                    <a href="#">{{firm}}</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <!-- <ul>
+                            <li v-for="(firm,index) in firmNames">
+                                <div class="abbyoushi_liangdian_nr_xk fl">
+                                    <div class="img_div"><img src="images/mint_zfbs.png">
+                                        <a href="javascript:void(0);">
+                                            <div class="mask">
+                                                <div class="abb_lingdian_qh fl">
+                                                    <div class="abb_lingdian_qh_bt fl">{{firm}}</div>
+                                                    <div class="abb_lingdian_qh_nr fl">北领地创新移民计划（MINT项目）由北领地政府官方背书授权</div>
+                                                    <div class="abb_lingdian_qh_zx fl">在线咨询</div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul> -->
+                        <!-- 
+
                         <div class="abbyoushi_liangdian_nr_xk fl">
                             <div class="img_div"><img src="images/mint_zfbs.png">
                                 <a href="javascript:void(0);">
@@ -172,7 +206,7 @@
                                     </div>
                                 </a>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="abbyoushi_liangdian_gg fl">
                         <a href="javascript:;"><img src="images/liangdian_gg.png"></a>
@@ -186,8 +220,7 @@
     <script src="js/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script src="js/axios-0.18.0.js"></script>
-    <script src="js/program copy.js"></script>
-    <script src="layui/layui.js"></script>
+    <script src="js/programcopy.js"></script>
 </body>
 
 </html>
