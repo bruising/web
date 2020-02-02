@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>添加项目框</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="lib/layui/css/layui.css" media="all">
+    <script src="js/jquery.min.js"></script>
+    <script src="lib/layui/layui.js"></script>
+</head>
+
+<body>
+
+<div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin"
+     style="padding: 20px 0 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目标题</label>
+        <div class="layui-input-inline">
+            <input type="text" name="programTitle" id="programTitle" lay-verify="programTitle" placeholder="请输入标题" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属国家</label>
+        <div class="layui-input-inline">
+            <input type="text" name="country" id="country" lay-verify="country" placeholder="请输入国家" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目简介</label>
+        <div class="layui-input-inline">
+            <input type="text" name="programInfo" id="programInfo" lay-verify="programInfo" placeholder="项目简介" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目申请要求</label>
+        <div class="layui-input-inline">
+            <input type="text" name="programRequire" id="programRequire" lay-verify="programRequire" placeholder="请输入项目申请要求" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系方式</label>
+        <div class="layui-input-inline">
+            <input type="text" name="programPhone" id="programPhone" lay-verify="programPhone" placeholder="请输入电话" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目优先级</label>
+        <div class="layui-input-inline">
+            <input type="text" name="programLevel" id="programLevel" lay-verify="programLevel" placeholder="优先级默认为1，越高越优先" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目优上架情况</label>
+        <div class="layui-input-inline">
+            <input type="text" name="programStatus" id="programStatus" lay-verify="programStatus" placeholder="1：正常，2：已下架" autocomplete="off"
+                   class="layui-input">
+        </div>
+
+    </div>
+
+
+    <div class="layui-form-item">
+        <input type="button" lay-submit lay-filter="LAY-user-front-submit" id="LAY-user-front-submit" value="确认">
+    </div>
+</div>
+
+
+<script>
+
+$(function () {
+
+    // let $user=JSON.parse(sessionStorage.getItem('user'))
+    let $url=JSON.parse(sessionStorage.getItem('url'))
+    let $token=JSON.parse(sessionStorage.getItem('token'))
+
+    layui.use(['form', 'upload'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , upload = layui.upload;
+
+
+        form.verify({
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+
+            programTitle: [
+                /^[\s\S]*.*[^\s][\s\S]*$/
+                , '标题不能是空'
+            ],
+            country: [
+                /^[\s\S]*.*[^\s][\s\S]*$/
+                , '国家不能是空'
+            ],
+            programInfo: [
+                /^[\s\S]*.*[^\s][\s\S]*$/
+                , '信息不能是空'
+            ],
+            programRequire: [
+                /^[\s\S]*.*[^\s][\s\S]*$/
+                , '要求不能是空'
+            ],
+            programPhone: [
+                /^[\s\S]*.*[^\s][\s\S]*$/
+                , '电话不能是空'
+            ],
+
+        });
+        var programTitle = $("#programTitle").val();
+        var country = $("#country").val();
+        var programInfo = $("#programInfo").val();
+        var programRequire = $("#programRequire").val();
+        var programPhone = $("#programPhone").val();
+        var programLevel = $("#programLevel").val();
+        var programStatus = $("#programStatus").val();
+        form.submit({
+            elem: '#LAY-user-front-submit'
+            , url: $url+'/program/doAddProgram'
+            , datatype: 'json'
+            , method: 'post'
+            ,data:{'programTitle':programTitle,'country':country,'programInfo':programInfo,
+                'programRequire':programRequire,'programPhone':programPhone,'programLevel':programLevel,
+                'programStatus':programStatus}
+            , success: function (res) {
+                alert("aa")
+                if(res.code==0){
+                    $(this.item).prev("div").children("input").val(res.url)
+                    layer.msg(res.status)
+                }else if(res.code==4){
+                    layer.msg(res.status)
+                }else{
+                    layer.msg('error')
+                }
+
+            }
+        })
+
+
+
+
+    })
+})
+
+
+
+
+
+
+</script>
+</body>
+
+</html>
