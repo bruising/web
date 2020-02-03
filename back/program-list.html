@@ -20,30 +20,21 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">标题</label>
                         <div class="layui-input-block">
-                            <input type="text" id="programTitle" placeholder="请输入" autocomplete="off" class="layui-input">
+                            <input type="text" name="programTitle" id="programTitle" placeholder="请输入" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">所属国家</label>
                         <div class="layui-input-block">
-                            <input type="text" id="country" placeholder="请输入" autocomplete="off" class="layui-input">
+                            <input type="text" name="country" id="country" placeholder="请输入" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">用户状态</label>
-                        <div class="layui-input-block">
-                            <select id="programStatus">
-                            <option value="0">不限</option>
-                            <option value="1">正常</option>
-                            <option value="2">待审核</option>
-                            <option value="3">停用</option>
-                        </select>
-                        </div>
-                    </div>
+
+
                     <div class="layui-inline">
                         <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
-                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                    </button>
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
                     </div>
 
                 </div>
@@ -51,19 +42,12 @@
 
             <div class="layui-card-body">
                 <div style="padding-bottom: 10px;">
-                    <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>
-                    <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">发布</button>
                 </div>
-
-                <table id="LAY-program-manage" lay-filter="LAY-program-manage"></table>
-                <script type="text/html" id="imgTpl">
-                    <img style="display: inline-block; width: 50%; height: 100%;" src={ { d.userPhoto }}>
-                </script>
+                <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
                 <script type="text/html" id="table-useradmin-webuser">
-                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a> {{# if(d.userStatus ==1){ }}
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>停用</a> {{# } }} {{# if(d.userStatus ===3||d.userStatus ===2){ }}
-                    <a class="layui-btn  layui-btn-xs" lay-event="shang"><i class="layui-icon layui-icon-up"></i>启用</a> {{# } }}
-
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-search"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
                 </script>
             </div>
         </div>
@@ -73,40 +57,6 @@
     <script>
         $(function() {
             let $url = JSON.parse(sessionStorage.getItem('url'))
-            var data = ""
-            var programTitle = ""
-            var country = ""
-            var programStatus = 1
-            $.ajax({
-                url: $url + "program/searchPrograms",
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    'programTitle': programTitle,
-                    'country': country,
-                    'programStatus': programStatus
-                },
-                success: function(rs) {
-                    console.log(rs)
-                    switch (rs.codeNum) {
-                        case 200:
-                            var data1 = rs.data
-
-                            localStorage.setItem("program", JSON.stringify(data1))
-                            return;
-                        case 123:
-                            alert('暂无数据')
-                            return;
-                        default:
-                            return;
-                    }
-                },
-                error: function() {
-                    alert('走丢了')
-                }
-            })
-
-            data = JSON.parse(localStorage.getItem("program"));
 
             layui.use(['form', 'table'], function() {
                 var $ = layui.$,
@@ -114,59 +64,44 @@
                     table = layui.table;
 
                 table.render({
-                    elem: '#LAY-program-manage',
-                    url: $url + 'program/searchPrograms' //模拟接口
-                        ,
+                    elem: '#LAY-user-manage',
+                    url: $url + 'program/searchPrograms', //模拟接口
                     cols: [
                         [{
                             type: 'checkbox',
                             fixed: 'left'
                         }, {
                             type: 'numbers',
-                            width: 80,
+
                             title: '序号',
                             sort: true
                         }, {
                             field: 'programTitle',
                             title: '标题',
-                            width: 300,
+
                             align: 'center',
                             fixed: 'right'
                         }, {
                             field: 'country',
                             title: '所属国家',
-                            width: 200,
+
                             align: 'center',
                             fixed: 'right'
                         }, {
                             field: 'programInfo',
                             title: '简介',
-                            width: 550,
+
                             align: 'center',
                             fixed: 'right'
                         }, {
                             field: 'programPhone',
                             title: '联系电话',
-                            width: 150,
+
                             align: 'center',
                             fixed: 'right'
                         }, {
-                            field: 'programStatus',
-                            title: '状态',
-                            align: 'center',
-                            fixed: 'right',
-                            templet: function(data) {
-                                if (data.programStatus == 1) {
-                                    return "正常";
-                                } else if (data.programStatus == 2) {
-                                    return "待审核";
-                                } else {
-                                    return "停用";
-                                }
-                            }
-                        }, {
                             title: '操作',
-                            width: 150,
+
                             align: 'center',
                             fixed: 'right',
                             toolbar: '#table-useradmin-webuser'
@@ -183,7 +118,7 @@
                 });
 
                 //监听工具条
-                table.on('tool(LAY-program-manage)', function(obj) {
+                table.on('tool(LAY-user-manage)', function(obj) {
                     var data = obj.data;
                     if (obj.event === 'del') {
                         layer.prompt({
@@ -192,7 +127,7 @@
                         }, function(value, index) {
                             layer.close(index);
                             if (value == 123456) { //口令
-                                layer.confirm('真的下架么', function(index) {
+                                layer.confirm('真的删除么', function(index) {
                                     $.ajax({
                                         url: $url + "program/deleteProgramById",
                                         dataType: 'json',
@@ -201,130 +136,83 @@
                                             'programId': data.programId
                                         },
                                         success: function(res) {
-                                            console.log(res)
                                             switch (res.code) {
-                                                case 200:
+                                                case 0:
                                                     layer.msg('成功')
-                                                    table.reload('LAY-program-manage'); //数据刷新
+                                                    table.reload('LAY-user-manage'); //数据刷新
                                                     break;
-                                                case 123:
+                                                case 4:
                                                     layer.msg('失败')
-                                                    break;
-                                                case "noToken":
-                                                    sessionStorage.clear()
                                                     break;
                                             }
                                         }
                                     })
                                     layer.close(index);
                                 });
-
                             } else {
                                 layer.msg('口令错误');
                             }
 
                         });
                     } else if (obj.event === 'edit') {
-                        let news_id = data.news_id
+                        // alert("我是要被修改的主键" + data.id)//操作行的主键
+                        let programId = data.programId
                         layer.open({
-                            type: 2,
-                            title: '编辑',
-                            content: 'newsInfo.html',
-                            maxmin: true,
-                            area: ['100%', '100%'],
-                            success: function(layero, index) {
+                            type: 2
+                            , title: '编辑'
+                            , content: 'programadd.html'
+                            , maxmin: true
+                            , area: ['100%', '100%']
+                            , btn: ['确定', '取消']
+                            , yes: function (index, layero) {
+                                var iframeWindow = window['layui-layer-iframe' + index]
+                                    , submitID = 'LAY-user-front-submit'
+                                    , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                                //监听提交
+                                iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+
+                                    var field = data.field; //获取提交的字段
+                                    field.programId = programId
+                                    // alert("我是被修改的内容" + JSON.stringify(field))//修改的内容
+                                    $.ajax({
+                                        url:$url+"/program/doUpdateProgram",
+                                        dataType:'json',
+                                        type:'post',
+                                        data:field,
+                                        success:function (res) {
+                                            switch (res.code) {
+                                                case 0:
+                                                    layer.msg('成功')
+                                                    table.reload('LAY-user-manage'); //数据刷新
+                                                    break;
+                                                case 4:
+                                                    layer.msg('失败')
+                                                    break;
+                                            }
+                                        }
+                                    })
+                                    //提交 Ajax 成功后，静态更新表格中的数据
+                                    //$.ajax({});
+                                    // table.reload('LAY-user-manage'); //数据刷新
+                                    layer.close(index); //关闭弹层
+                                });
+
+                                submit.trigger('click');
+                            }
+                            , success: function (layero, index) {
                                 var body = layui.layer.getChildFrame('body', index);
 
-                                $.ajax({
-                                    url: $url + "/queryNewById",
-                                    dataType: 'json',
-                                    type: 'post',
-                                    data: {
-                                        'token': $token,
-                                        'news_id': data.news_id
-                                    },
-                                    success: function(res) {
-                                        switch (res.msg) {
-                                            case "success":
-                                                // alert(JSON.stringify(res.data))
-                                                body.append(res.data)
-                                                break;
-                                            case "failed":
-                                                layer.msg('失败')
-                                                break;
-                                            case "noToken":
-                                                sessionStorage.clear()
-
-                                                break;
-                                        }
-                                    }
-                                })
+                                //点击编辑后 ajax查询当前得用户信息, 把值从父页面传入Iframe页面
+                                body.find("#programTitle").val(data.programTitle);
+                                body.find("#country").val(data.country);
+                                body.find("#programInfo").val(data.programInfo);
+                                body.find("#programRequire").val(data.programRequire);
+                                body.find("#programPhone").val(data.programPhone);
+                                body.find("#programLevel").val(data.programLevel);
                             }
                         });
 
-                    } else if (obj.event === 'qz') {
-                        layer.prompt({
-                            title: '权重',
-                            formType: 3,
-                            value: data.news_level
-                        }, function(value, index) {
-                            let val = Number(value)
-                            if (isNaN(val)) {
-                                layer.msg('请输入数字')
-                            } else {
-                                $.ajax({
-                                    url: $url + "/updateNewsLevel",
-                                    dataType: 'json',
-                                    type: 'post',
-                                    data: {
-                                        'token': $token,
-                                        'news_id': data.news_id,
-                                        'news_level': val
-                                    },
-                                    success: function(res) {
-                                        switch (res.msg) {
-                                            case "success":
-                                                layer.msg('修改成功')
-                                                table.reload('LAY-program-manage'); //数据刷新
-                                                break;
-                                            case "failed":
-                                                layer.msg('修改失败')
-                                                break;
-                                            case "noToken":
-                                                sessionStorage.clear()
-
-                                                break;
-                                        }
-                                    }
-                                })
-                                layer.close(index);
-                            }
-                        })
-                    } else if (obj.event === 'shang') {
-                        $.ajax({
-                            url: $url + "/shang",
-                            dataType: 'json',
-                            type: 'post',
-                            data: {
-                                'token': $token,
-                                'news_id': data.news_id
-                            },
-                            success: function(res) {
-                                switch (res.msg) {
-                                    case "success":
-                                        layer.msg('成功')
-                                        table.reload('LAY-program-manage'); //数据刷新
-                                        break;
-                                    case "failed":
-                                        layer.msg('失败')
-                                        break;
-                                    case "noToken":
-                                        sessionStorage.clear()
-
-                                        break;
-                                }
-                            }
-                        })
                     }
                 });
 
@@ -335,7 +223,7 @@
                     // alert("我是搜索内容" + JSON.stringify(field))//搜索的值
 
                     //执行重载
-                    table.reload('LAY-program-manage', {
+                    table.reload('LAY-user-manage', {
                         where: field,
                     });
                 });
@@ -388,29 +276,42 @@
                         layer.open({
                             type: 2,
                             title: '添加',
-                            content: 'usersform.html',
+                            content: 'programadd.html',
                             maxmin: true,
-                            area: ['500px', '450px'],
+                            area: ['100%', '100%'],
                             btn: ['确定', '取消'],
                             yes: function(index, layero) {
                                 var iframeWindow = window['layui-layer-iframe' + index],
                                     submitID = 'LAY-user-front-submit' //iframe.html的submit的id
                                     ,
-                                    submit = layero.find('iframe').contents().find('#' + submitID);
-
+                                    submit = layero.find('iframe').contents().find('#' + submitID)
                                 //监听提交
                                 iframeWindow.layui.form.on('submit(' + submitID + ')', function(data) {
                                     var field = data.field; //获取提交的字段
                                     alert("我是添加的内容" + JSON.stringify(field))
                                         //提交 Ajax 成功后，静态更新表格中的数据
-                                        //$.ajax({});
-                                    table.reload('LAY-user-front-submit'); //数据刷新
+                                    $.ajax({
+                                        url:$url+"/program/doAddProgram",
+                                        dataType:'json',
+                                        type:'post',
+                                        data:field,
+                                        success:function (res) {
+                                            switch (res.code) {
+                                                case 0:
+                                                    layer.msg('成功')
+                                                    table.reload('LAY-user-manage'); //数据刷新
+                                                    break;
+                                                case 4:
+                                                    layer.msg('失败')
+                                                    break;
+                                            }
+                                        }
+                                    })
+                                    // table.reload('LAY-user-front-submit'); //数据刷新
                                     layer.close(index); //关闭弹层
                                 });
-
                                 submit.trigger('click');
                             }
-
                             ,
                             success: function(layero, index) {
 
@@ -419,6 +320,7 @@
                         });
                     }
                 };
+
 
                 $('.layui-btn.layuiadmin-btn-useradmin').on('click', function() {
                     var type = $(this).data('type');

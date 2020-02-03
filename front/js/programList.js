@@ -28,13 +28,13 @@
             handleSizeChange: function(size) {
                 this.pagesize = size;
                 console.log(this.pagesize) //每页下拉显示数据
-                this.handleNewsList(this.pagesize, this.currentPage)
+                this.handleProgramsList(this.pagesize, this.currentPage)
             },
             //获取当前所在页
             handleCurrentChange: function(currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage) //点击第几页
-                this.handleNewsList(this.pagesize, this.currentPage)
+                this.handleProgramsList(this.pagesize, this.currentPage)
             },
             //加载数据
             handleProgramsList: function(pagesize, currentPage) {

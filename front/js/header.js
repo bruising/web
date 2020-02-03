@@ -45,7 +45,6 @@ var head = new Vue({     //创建一个Vue的实例
             //通过token获取缓存中的用户
             var params = new URLSearchParams();
             params.append('token', token);
-            alert(this.url)
             axios.post(this.url+"/isLogin",params,{
                 headers: {
                     token:token
